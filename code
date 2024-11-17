@@ -1,0 +1,62 @@
+import random
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+takeaways = [
+    {"name": "Wagamamas", "cuisine": "Japanese", "price": "£20" },
+    {"name": "Pizza Hut", "cuisine": "Italian", "price": "£18"},
+    {"name": "New Wung", "cuisine": "Chinese", "price": "£25"},
+    {"name": "Times Kebab", "cuisine": "Turkish", "price": "£12"},
+    {"name": "DF Taco", "cuisine": "Mexican", "price": "£15"},
+    
+]
+
+def filter_takeaways(cuisine=None, price=None):
+    filtered = takeaways
+    if cuisine and cuisine != "Any":
+        filtered = [t for t in filtered if t["cuisine"].lower() == cuisine.lower()]
+    if price and price != "Any":
+        filtered = [t for t in filtered if t["price"] == price]
+    return filtered
+
+def select_takeaway():
+    cuisine = cuisine_var.get()
+    
+    
+    filtered_takeaways = filter_takeaways(cuisine)
+    
+    if not filtered_takeaways:
+        messagebox.showinfo("No Results", "No matching takeaways found. Try different criteria.")
+        return
+    
+    choice = random.choice(filtered_takeaways)
+    result_label.config(
+        text=f"Today's takeaway choice is:\n{choice['name']}  ({choice['cuisine']} {"usually costs"} {choice['price']})"
+    )
+
+# Tkinter GUI setup
+root = tk.Tk()
+root.title("Takeaway Selector")
+
+# Cuisine selection
+tk.Label(root, text="Select Cuisine:").grid(row=0, column=0, padx=10, pady=10)
+cuisine_var = tk.StringVar(value="Any")
+cuisine_options = ["Any", "Japanese", "Italian", "Chinese", "Turkish", "Mexican"]
+cuisine_menu = ttk.Combobox(root, textvariable=cuisine_var, values=cuisine_options)
+cuisine_menu.grid(row=0, column=1, padx=10, pady=10)
+
+
+
+# Button to select takeaway
+select_button = ttk.Button(root, text="Find Takeaway", command=select_takeaway)
+select_button.grid(row=2, column=0, columnspan=2, pady=20)
+
+# Result label
+result_label = tk.Label(root, text="", font=("Helvetica", 12), wraplength=300, justify="center")
+result_label.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+
+# Run the application
+root.mainloop()
+
+
+
